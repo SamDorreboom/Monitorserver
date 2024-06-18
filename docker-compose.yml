@@ -12,9 +12,9 @@ services:
       - '81:81'
     volumes:
 #Alle instellingen lokaal opslaan
-      - ./nginx/nginxdata:/data
+      - opt/docker/nginx/nginxdata:/data
 #SSL certificaten lokaal opslaan
-      - ./nginx/letsencrypt:/etc/letsencrypt
+      - opt/docker/nginx/letsencrypt:/etc/letsencrypt
     networks:
       - monitoring_netwerk
 
@@ -28,10 +28,10 @@ services:
     networks:
       - monitoring_netwerk
     volumes:
-      - ./grafana/config:/etc/grafana-config
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
-      - ./grafana/dashboards-provisioning:/etc/grafana/provisioning/dashboards
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - opt/docker/grafana/config:/etc/grafana-config
+      - opt/docker/grafana/datasources:/etc/grafana/provisioning/datasources
+      - opt/docker/grafana/dashboards-provisioning:/etc/grafana/provisioning/dashboards
+      - opt/docker/grafana/dashboards:/var/lib/grafana/dashboards
 
   graphite:
     image: graphiteapp/graphite-statsd
@@ -48,7 +48,7 @@ services:
       - monitoring_netwerk
     volumes:
 #Config file lokaal opslaan
-      - ./graphite/config:/opt/graphite/conf
+      - opt/docker/graphite/config:/opt/graphite/conf
 #Whisper database lokaal opslaan
-      - ./graphite/whisper:/opt/graphite/storage
+      - opt/docker/graphite/whisper:/opt/graphite/storage
 
