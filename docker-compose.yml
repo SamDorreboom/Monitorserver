@@ -39,7 +39,7 @@ services:
 #Bij het opnieuw opstarten van de server wordt graphtie alleen opgestart als deze aan stond.
     restart: unless-stopped
     ports:
-      - '82:80'
+      - '8080:80'
       - '2003-2004:2003-2004'
       - '2023-2024:2023-2024'
       - '8125:8125/udp'
