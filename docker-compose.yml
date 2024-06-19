@@ -3,7 +3,6 @@ version: '3'
 services:
   nginx:
     image: 'jc21/nginx-proxy-manager:latest'
-#Bij het opnieuw opstarten van de server wordt nginx alleen opgestart als deze aan stond.
     restart: unless-stopped
     container_name: proxy-manager
     ports:
@@ -11,32 +10,26 @@ services:
       - '443:443'
       - '81:81'
     volumes:
-#Alle instellingen lokaal opslaan
-      - opt/docker/nginx/nginxdata:/data
-#SSL certificaten lokaal opslaan
-      - opt/docker/nginx/letsencrypt:/etc/letsencrypt
+      - ./nginx/nginxdata:/data
+      - ./nginx/letsencrypt:/etc/letsencrypt
     networks:
       - monitoring_netwerk
 
   grafana:
     image: grafana/grafana
     container_name: grafana
-#Bij het opnieuw opstarten van de server wordt grafana alleen opgestart als deze aan stond.
     restart: unless-stopped
     ports:
       - '3000:3000'
     networks:
       - monitoring_netwerk
     volumes:
-      - opt/docker/grafana/config:/etc/grafana-config
-      - opt/docker/grafana/datasources:/etc/grafana/provisioning/datasources
-      - opt/docker/grafana/dashboards-provisioning:/etc/grafana/provisioning/dashboards
-      - opt/docker/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana:/var/lib/grafana
+    user: "0:0"
 
   graphite:
     image: graphiteapp/graphite-statsd
     container_name: graphite
-#Bij het opnieuw opstarten van de server wordt graphtie alleen opgestart als deze aan stond.
     restart: unless-stopped
     ports:
       - '8080:80'
@@ -47,8 +40,11 @@ services:
     networks:
       - monitoring_netwerk
     volumes:
-#Config file lokaal opslaan
-      - opt/docker/graphite/config:/opt/graphite/conf
-#Whisper database lokaal opslaan
-      - opt/docker/graphite/whisper:/opt/graphite/storage
+      - ./graphite/config:/opt/graphite/conf
+      - ./graphite/whisper:/opt/graphite/storage
+#      - ./graphite/webapp:/opt/graphite/webapp
+    environment:
+      - GRAPHITE_TIME_ZONE=Europe/Amsterdam
 
+networks:
+  monitoring_netwerk:
